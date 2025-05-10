@@ -19,7 +19,7 @@ namespace Hooks
 
 	void SprintHandlerHook::ProcessButton(RE::SprintHandler* a_this, RE::ButtonEvent* a_event, RE::PlayerControlsData* a_data)
 	{
-		using FlagBDD = RE::PlayerCharacter::FlagBDD;
+		using PlayerFlags = RE::PlayerCharacter::PlayerFlags;
 
 		if (Settings::bUseSprintButton) {
 			auto playerCharacter = RE::PlayerCharacter::GetSingleton();
@@ -27,7 +27,7 @@ namespace Hooks
 			auto userEvents = RE::UserEvents::GetSingleton();
 
 			if (userEvent == userEvents->sprint) {
-				if (a_event->IsDown() && (playerCharacter->unkBDD & FlagBDD::kSprinting) != FlagBDD::kNone) { // stopping sprint
+				if (a_event->IsDown() && playerCharacter->GetPlayerRuntimeData().playerFlags.isSprinting == 1) { // stopping sprint
 					bStoppingSprint = true;
 				} else if (a_event->HeldDuration() < Settings::fSprintHoldDuration) {
 					if (a_event->IsUp())
@@ -36,7 +36,7 @@ namespace Hooks
 						bStoppingSprint = false;
 					}
 					return;
-				} else if (playerCharacter && (playerCharacter->unkBDD & FlagBDD::kSprinting) == FlagBDD::kNone && !bStoppingSprint) {
+				} else if (playerCharacter && (playerCharacter->GetPlayerRuntimeData().playerFlags.isSprinting == 0) && !bStoppingSprint) {
 					a_event->heldDownSecs = 0.f;
 				} else if (a_event->IsUp()) {
 					bStoppingSprint = false;
