@@ -6,7 +6,7 @@ A basic SKSE plugin for dodge mods.
 * [PowerShell](https://github.com/PowerShell/PowerShell/releases/latest)
 * [Vcpkg](https://github.com/microsoft/vcpkg)
 	* Add the environment variable `VCPKG_ROOT` with the value as the path to the folder containing vcpkg
-* [Visual Studio Community 2019](https://visualstudio.microsoft.com/)
+* [Visual Studio Community 2022](https://visualstudio.microsoft.com/)
 	* Desktop development with C++
 
 ## Register Visual Studio as a Generator
@@ -16,9 +16,6 @@ A basic SKSE plugin for dodge mods.
 
 ## Building
 ```
-git clone https://github.com/ersh1/DodgeFramework
-cd DodgeFramework
-git submodule update --init --recursive
-git submodule update --recursive --remote
-cmake -B build -S .
+cmake --preset vs2022-windows
+cmake --build build --config Release
 ```

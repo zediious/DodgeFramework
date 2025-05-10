@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "*.in": "cpp",
+        "array": "cpp",
+        "ranges": "cpp",
+        "span": "cpp",
+        "vector": "cpp",
+        "xstring": "cpp",
+        "xutility": "cpp",
+        "cmath": "cpp",
+        "complex": "cpp"
+    }
+}
