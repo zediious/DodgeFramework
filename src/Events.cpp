@@ -4,6 +4,34 @@
 
 namespace Events
 {
+	// Checking if Wheeler exists, getting check function if so
+	using IsWheelerOpen_t = bool(*)();
+	IsWheelerOpen_t GetIsWheelerOpen()
+	{
+		HMODULE wheelerHandle = GetModuleHandleA("wheeler.dll");
+
+		if (!wheelerHandle)
+			return nullptr;
+
+		return reinterpret_cast<IsWheelerOpen_t>(
+			GetProcAddress(wheelerHandle, "IsWheelerOpen"));
+	}
+
+	// Perform check for wheeler, and do not dodge if the mod exists and menu is open
+	bool CheckIfWheelerOpen() {
+		if (auto isOpenFunc = GetIsWheelerOpen()) {
+			logger::debug("Wheeler is installed");
+			if (isOpenFunc()) {
+				logger::debug("Wheeler is open");
+				return true;
+			}
+			return false;
+		}
+		else {
+			logger::debug("Failed to find IsWheelerOpen(), mod is likely not installed.");
+			return false;
+		}
+	}
 	enum Direction : std::uint32_t
 	{
 		kNeutral = 0,
@@ -85,13 +113,18 @@ namespace Events
 			return;
 		}
 
+		// Do not dodge if Wheeler is open. Safe is Wheeler is not installed.
+		if (CheckIfWheelerOpen()) {
+			return;
+		}
+
 		logger::debug("player character not null");
 
 		if (ui->GameIsPaused() || !controlMap->IsMovementControlsEnabled() || !controlMap->IsLookingControlsEnabled() || ui->IsMenuOpen("Dialogue Menu") 
 		|| ui->IsMenuOpen("TweenMenu") || ui->IsMenuOpen("InventoryMenu") || ui->IsMenuOpen("MagicMenu") || ui->IsMenuOpen("ContainerMenu") || ui->IsMenuOpen("SleepWaitMenu") 
 		|| ui->IsMenuOpen("Journal Menu") || ui->IsMenuOpen("Main Menu") || ui->IsMenuOpen("MapMenu") || ui->IsMenuOpen("Crafting Menu") || ui->IsMenuOpen("Book Menu") 
-		|| ui->IsMenuOpen("Lockpicking Menu") || ui->IsMenuOpen("RaceSex Menu") || ui->IsMenuOpen("BarterMenu") || playerCharacter->AsActorState()->GetSitSleepState() != RE::SIT_SLEEP_STATE::kNormal 
-		|| playerCharacter->AsActorValueOwner()->GetActorValue(RE::ActorValue::kStamina) <= 0) {
+		|| ui->IsMenuOpen("Lockpicking Menu") || ui->IsMenuOpen("RaceSex Menu") || ui->IsMenuOpen("BarterMenu") || ui->IsMenuOpen("FavoritesMenu")
+		|| playerCharacter->AsActorState()->GetSitSleepState() != RE::SIT_SLEEP_STATE::kNormal || playerCharacter->AsActorValueOwner()->GetActorValue(RE::ActorValue::kStamina) <= 0) {
 			return;
 		}
 
