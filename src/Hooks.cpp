@@ -7,11 +7,11 @@ namespace Hooks
 {
 	void Install()
 	{
-		logger::trace("Hooking...");
+		logger::info("Hooking...");
 
 		SprintHandlerHook::Hook();
 
-		logger::trace("...success");
+		logger::info("...success");
 	}
 
 	static bool bStoppingSprint = false;
@@ -21,24 +21,33 @@ namespace Hooks
 	{
 		using PlayerFlags = RE::PlayerCharacter::PlayerFlags;
 
+		logger::debug("Sprint handler hook called");
+
 		if (Settings::bUseSprintButton) {
 			auto playerCharacter = RE::PlayerCharacter::GetSingleton();
 			auto userEvent = a_event->QUserEvent();
 			auto userEvents = RE::UserEvents::GetSingleton();
 
+			logger::debug("Is using sprint button");
 			if (userEvent == userEvents->sprint) {
+				logger::debug("user event is sprint");
 				if (a_event->IsDown() && playerCharacter->GetPlayerRuntimeData().playerFlags.isSprinting == 1) { // stopping sprint
+					logger::debug("stopping sprint");
 					bStoppingSprint = true;
 				} else if (a_event->HeldDuration() < Settings::fSprintHoldDuration) {
+					logger::debug("held duration less than setting for hold duration");
 					if (a_event->IsUp())
-					{
+					{	
+						logger::debug("event is up, dodging");
 						Events::Dodge();
 						bStoppingSprint = false;
 					}
 					return;
 				} else if (playerCharacter && (playerCharacter->GetPlayerRuntimeData().playerFlags.isSprinting == 0) && !bStoppingSprint) {
+					logger::debug("not sprinting, reset held seconds");
 					a_event->heldDownSecs = 0.f;
 				} else if (a_event->IsUp()) {
+					logger::debug("key is back up, not stopping sprint");
 					bStoppingSprint = false;
 				}
 			}

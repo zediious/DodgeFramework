@@ -57,11 +57,15 @@ namespace Events
 		using EventType = RE::INPUT_EVENT_TYPE;
 		using DeviceType = RE::INPUT_DEVICE;
 
+		logger::debug("Processing event");
+
 		if (Settings::uDodgeKey == kInvalid) {
+			logger::debug("invalid dodge key");
 			return EventResult::kContinue;
 		}
 
 		if (!a_event) {
+			logger::debug("no event present");
 			return EventResult::kContinue;
 		}
 
@@ -72,6 +76,7 @@ namespace Events
 
 			auto button = static_cast<RE::ButtonEvent*>(event);
 			if (!button->IsDown()) {
+				logger::debug("button is not down");
 				continue;
 			}
 
@@ -90,18 +95,23 @@ namespace Events
 				continue;
 			}
 
+			logger::debug("checking if dodge key");
 			if (key == Settings::uDodgeKey )
 				{
+				logger::debug("is dodge key");
 				Dodge();
 				break;
 			}
 		}
 
+		logger::debug("doing nothing");
 		return EventResult::kContinue;
 	}
 
 	void Dodge()
 	{
+		logger::debug("Dodge function called");
+
 		auto playerCharacter = RE::PlayerCharacter::GetSingleton();
 		auto playerControls = RE::PlayerControls::GetSingleton();
 
@@ -308,6 +318,6 @@ namespace Events
 	{
 		auto deviceManager = RE::BSInputDeviceManager::GetSingleton();
 		deviceManager->AddEventSink(InputEventHandler::GetSingleton());
-		logger::info("Added input event sink");
+		logger::debug("Added input event sink");
 	}
 }
