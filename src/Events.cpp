@@ -120,7 +120,7 @@ namespace Events
 
 		logger::debug("player character not null");
 
-		if (ui->GameIsPaused() || !controlMap->IsMovementControlsEnabled() || !controlMap->IsLookingControlsEnabled() || ui->IsMenuOpen("Dialogue Menu") 
+		if (ui->GameIsPaused() || !controlMap->IsMovementControlsEnabled() || ui->IsMenuOpen("Dialogue Menu") 
 		|| ui->IsMenuOpen("TweenMenu") || ui->IsMenuOpen("InventoryMenu") || ui->IsMenuOpen("MagicMenu") || ui->IsMenuOpen("ContainerMenu") || ui->IsMenuOpen("SleepWaitMenu") 
 		|| ui->IsMenuOpen("Journal Menu") || ui->IsMenuOpen("Main Menu") || ui->IsMenuOpen("MapMenu") || ui->IsMenuOpen("Crafting Menu") || ui->IsMenuOpen("Book Menu") 
 		|| ui->IsMenuOpen("Lockpicking Menu") || ui->IsMenuOpen("RaceSex Menu") || ui->IsMenuOpen("BarterMenu") || ui->IsMenuOpen("FavoritesMenu")
